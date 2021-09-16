@@ -1,3 +1,3 @@
 # YAIS, another moderator bot is here
 ### What is this?
-A bot I collab with
+A bot I collab with @nknhu
