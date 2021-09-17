@@ -3,6 +3,7 @@ import os
 from discord.ext import commands
 from discord.ext.commands import has_permissions, CheckFailure
 from discord.utils import get
+import time
 
 class DevCommands(commands.Cog, name='Developer Commands'):
     '''These are the developer commands'''
@@ -85,10 +86,8 @@ class Moderation(commands.Cog, name='Moderation'):
     @commands.command(name='ban')
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, user: discord.Member, *, reason=None):
-        await ctx.guild.ban(user, reason=reason)
-        await user.send(
-            f'You got banned from {user.guild.name}. Reason:{reason} ')
         await ctx.send(f'{user.mention} was banned. Reason: ')
+        await ctx.guild.ban(user, reason=reason)
 
     @commands.command(name='kick')
     @commands.has_permissions(kick_members=True)
@@ -123,15 +122,23 @@ class Moderation(commands.Cog, name='Moderation'):
         await ctx.send('Added successfully!')
         return 0
 
+    @commands.command(name='ShowBadWord',aliases=['sbw'])
+    async def ShowBadWord(seld, ctx):
+        breh = []
+        with open('cogs/badwords.txt') as f:
+          for x in f:
+            breh.append(x)
+        await ctx.send(breh)
+
     @commands.Cog.listener()
     async def on_message(self,message):
-        if message.author == self.bot.user:
-          return
         with open('cogs/badwords.txt')as f:
           for x in f:
-            if x.upper() in message.content.upper():
+            if x.upper() in message.content.upper() and message.author != self.bot.user:
               await message.delete()
               await message.channel.send(f"{message.author.mention} Don't say that!")
+        if message.author == self.bot.user:
+          return
 
 def setup(bot):
     bot.add_cog(DevCommands(bot))
