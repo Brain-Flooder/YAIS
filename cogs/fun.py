@@ -6,7 +6,7 @@ from discord.utils import get
 import time
 import random
 
-class FunCommands(commands.Cog, name='Developer Commands'):
+class FunCommands(commands.Cog, name='FunCommands'):
     '''These are the developer commands'''
     def __init__(self, bot):
         self.bot = bot
