@@ -7,21 +7,15 @@ import time
 import random
 
 class FunCommands(commands.Cog, name='FunCommands'):
-    '''These are the developer commands'''
+    '''These are the fun commands'''
     def __init__(self, bot):
         self.bot = bot
-
-    async def cog_check(self, ctx):
-        '''
-		The default check for this cog whenever a command is used. Returns True if the command is allowed.
-		'''
-        return ctx.author.id == self.bot.author_id
     
     @commands.command(name='coinflip',aliases=['cf'])
     async def coinfilp(self,ctx):
         await ctx.send(f'{ctx.author.mention} flipped the coin!')
         h = random.randint(0,1)
-        time.sleep(random.random()+random.random())
+        time.sleep(random.random()+random.random()+random.random())
         if h == 1:
           await ctx.send('The coin is head. GG!')
         else:
@@ -30,7 +24,7 @@ class FunCommands(commands.Cog, name='FunCommands'):
     @commands.command(name='dice')
     async def dice(self,ctx):
         await ctx.send(f'{ctx.author.mention} rolled the dice.')
-        time.sleep(random.random()+random.random())
+        time.sleep(random.random()+random.random()+random.random())
         h = random.randint(1,6)
         if h == 1:
           await ctx.send('The dice rolled 1. GG!')

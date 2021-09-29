@@ -7,6 +7,14 @@
         "version": 566,
         "index": 738
       }
+    ],
+    "cogs/commands.py": [
+      {
+        "id": "122e2619-9efb-4db6-8c72-248a67a7e512",
+        "line": 11,
+        "version": 2736,
+        "index": 341
+      }
     ]
   }
 }
