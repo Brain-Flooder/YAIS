@@ -1,8 +1,5 @@
 import discord
-import os
 from discord.ext import commands
-from discord.ext.commands import has_permissions, CheckFailure
-from discord.utils import get
 import time
 import random
 
@@ -11,6 +8,7 @@ class FunCommands(commands.Cog, name='FunCommands'):
     def __init__(self, bot):
         self.bot = bot
     
+
     @commands.command(name='coinflip',aliases=['cf'])
     async def coinfilp(self,ctx):
         await ctx.send(f'{ctx.author.mention} flipped the coin!')

@@ -7,7 +7,8 @@ from pretty_help import DefaultMenu, PrettyHelp
 bot = commands.Bot(
     command_prefix="y!",  # Change to desired prefix
     case_insensitive=True,  # Commands aren't case-sensitive
-    help_command=None
+    help_command=None,
+		intents=discord.Intents.default(),
 )
 bot.author_id = 832264231617167381  # Change to your discord id!!!
 
@@ -19,6 +20,11 @@ async def on_ready():  # When the bot is ready
         type=discord.ActivityType.watching, name=f"{bot.command_prefix}help"))
 menu = DefaultMenu('◀️', '▶️', '❌') # You can copy-paste any icons you want.
 bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green()) 
+
+@bot.command(name='invite',description='My invite link')
+async def a(ctx):
+    emb = discord.Embed(title='My invite link', description='Click [me](https://discord.com/api/oauth2/authorize?client_id=884997422072332378&permissions=8&scope=bot%20applications.commands)')
+    await ctx.send(embed=emb)
 
 @bot.command(name='howmuchcmd')
 async def b(ctx):
