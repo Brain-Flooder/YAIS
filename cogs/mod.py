@@ -173,7 +173,7 @@ class Moderation(commands.Cog, name='Moderation'):
   @has_permissions(manage_messages=True)
   async def purge(self,ctx,count:int):
     count+=1
-    mscount=0
+    mscount=-1
     async for message in ctx.channel.history(limit=count):
       await message.delete()
       mscount+=1
