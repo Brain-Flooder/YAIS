@@ -2,7 +2,7 @@ from discord.ext import commands
 
 class DevCommands(commands.Cog, name='Developer Commands'):
     '''These are the developer commands'''
-    def __init__(self, bot):
+"""    def __init__(self, bot):
         self.bot = bot
 
     async def cog_check(self, ctx):
@@ -65,7 +65,7 @@ class DevCommands(commands.Cog, name='Developer Commands'):
         base_string = "```css\n"  # Gives some styling to the list (on pc side)
         base_string += "\n".join([str(cog) for cog in self.bot.extensions])
         base_string += "\n```"
-        await ctx.send(base_string)
+        await ctx.send(base_string)"""
 		
 def setup(bot):
     bot.add_cog(DevCommands(bot))

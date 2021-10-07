@@ -2,10 +2,7 @@ import os
 import discord
 from keep_alive import keep_alive
 from discord.ext import commands
-from discord.ext.commands import MissingPermissions
 from pretty_help import DefaultMenu, PrettyHelp
-
-
 
 intents = discord.Intents().all()
 
@@ -26,6 +23,11 @@ async def on_ready():  # When the bot is ready
 
 menu = DefaultMenu('◀️', '▶️', '❌') # You can copy-paste any icons you want.
 bot.help_command = PrettyHelp(navigation=menu, color=0x8ad2ff) 
+
+@bot.command(name='nick')
+async def nick(ctx,nick):
+  await ctx.author.edit(nick=nick)
+  await ctx.send('Changed! BTW did you know Discord has a / command  for this?')
 
 @bot.command(name='invite',description='My invite link')
 async def a(ctx):

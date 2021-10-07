@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands import has_permissions, MissingPermissions
 import re
+from discord.ext.commands import MissingPermissions
 from replit import db
 
 class Moderation(commands.Cog, name='Moderation'):
@@ -102,10 +102,10 @@ class Moderation(commands.Cog, name='Moderation'):
               if len(re.findall(f'{x}',message.content.lower()))>0:
                 await message.delete()
                 await message.channel.send(f"{message.author.mention} Don't say that >:(", delete_after = 3)
-                try:
+                """try:
                   db[f"{message.author.id}, {message.author.guild.id}"]
                 except:
-                  db[f"{message.author.id}, {message.author.guild.id}"] ='1'
+                  db[f"{message.author.id}, {message.author.guild.id}"] ='1'"""
                 
         if message.author == self.bot.user:
           return
@@ -123,7 +123,7 @@ class Moderation(commands.Cog, name='Moderation'):
       print(db[f"{mem.id}, {mem.guild}"])
   
   @commands.command(name='nuke', description='Clone and delete a channel')
-  @has_permissions(manage_channels=True)
+  @commands.has_permissions(manage_channels=True)
   async def nuke(self,ctx):
     m = ctx.channel.position
     e = await ctx.channel.clone()
@@ -132,7 +132,7 @@ class Moderation(commands.Cog, name='Moderation'):
     await e.send(f'{ctx.message.author.mention} nuked the channel')
 
   @commands.command(name='mute',description='Mute someone')
-  @has_permissions(manage_messages=True)
+  @commands.has_permissions(manage_messages=True)
   async def mute(self,ctx,user:discord.Member,*,reson=None):
     overwrite = discord.PermissionOverwrite()
     overwrite.send_messages = False
@@ -170,14 +170,11 @@ class Moderation(commands.Cog, name='Moderation'):
     await ctx.send(f'User {user} has been unmuted. Reason: {reson}')
 
   @commands.command(name='purge',description='Delete a number of messages')
-  @has_permissions(manage_messages=True)
+  @commands.has_permissions(manage_messages=True)
   async def purge(self,ctx,count:int):
-    count+=1
-    mscount=-1
-    async for message in ctx.channel.history(limit=count):
-      await message.delete()
-      mscount+=1
-    await ctx.send(f'Successfully deleted {mscount} message',delete_after=3)
+    count += 1
+    deleted = await ctx.channel.purge(limit = count)
+    await ctx.send(f'Deleted {len(deleted)-1} message',delete_after = 3)
 
   @commands.command(name='role')
   @commands.has_permissions(manage_roles=True)
