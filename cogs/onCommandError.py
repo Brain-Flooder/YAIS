@@ -1,8 +1,7 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands import MissingPermissions, CheckFailure, CommandNotFound, NotOwner, MissingRequiredArgument
+from discord.ext.commands import MissingPermissions, CheckFailure, CommandNotFound, NotOwner, MissingRequiredArgument, TooManyArguments, BotMissingPermissions
 import time
-
 
 class OnCommandErrorCog(commands.Cog, name="on command error"):
   def __init__(self, bot:commands.Bot):
@@ -26,12 +25,16 @@ class OnCommandErrorCog(commands.Cog, name="on command error"):
       await ctx.send("No command found",delete_after=3)
     elif isinstance(error, MissingPermissions):
       await ctx.send("❌ You don't have permission to do that.")
+    elif isinstance(error, BotMissingPermissions):
+      await ctx.send("I don't have permission to do that :(")
     elif isinstance(error, CheckFailure):
       await ctx.send(error)
     elif isinstance(error, NotOwner):
       await ctx.send(error)
-    if isinstance(error, MissingRequiredArgument):
-        await ctx.send("A parameter is missing") 
+    elif isinstance(error, MissingRequiredArgument):
+        await ctx.send("A argument is missing")
+    elif isinstance(error, TooManyArguments):
+        await ctx.send("Some arguments are more than needed.")
     else:
       print(error)
       await ctx.reply('An unknown error occured.\nFor more help, join this server (https://discord.gg/t9eH5yuMR4) and send us a photo of the error.')

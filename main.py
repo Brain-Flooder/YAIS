@@ -7,7 +7,7 @@ from pretty_help import DefaultMenu, PrettyHelp
 intents = discord.Intents().all()
 
 bot = commands.Bot(
-    command_prefix="y!",  # Change to desired prefix
+    command_prefix="ys?",  # Change to desired prefix
     case_insensitive=True,  # Commands aren't case-sensitive
     help_command=None,
 		intents=intents,
@@ -25,7 +25,7 @@ menu = DefaultMenu('◀️', '▶️', '❌') # You can copy-paste any icons you
 bot.help_command = PrettyHelp(navigation=menu, color=0x8ad2ff) 
 
 @bot.command(name='nick')
-async def nick(ctx,nick):
+async def nick(ctx,*,nick):
   await ctx.author.edit(nick=nick)
   await ctx.send('Changed! BTW did you know Discord has a / command  for this?')
 

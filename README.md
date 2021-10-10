@@ -11,7 +11,7 @@ Banlist
 
 Kick
 
-AutoMod
+AutoMod (Powered by Perspective's AI)
 
 Disable/Enable AutoMod
 
