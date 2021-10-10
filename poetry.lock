@@ -211,12 +211,15 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
-name = "perspective"
-version = "1.0.3"
-description = "A package for interacting with the Perspective API"
+name = "pyperspective"
+version = "1.0.4"
+description = "A Basic Library For Perspective API Usage"
 category = "main"
 optional = false
-python-versions = ">=3.8"
+python-versions = "*"
+
+[package.dependencies]
+requests = "*"
 
 [[package]]
 name = "replit"
@@ -321,7 +324,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "096452317a795859e86c71143ac1cfda6725cb05070329b3cd55bf9a06bf985d"
+content-hash = "21cbdf12d0a14d1414c16708099c9fdc42d38baf74ee730620c5b89d2aa1c575"
 
 [metadata.files]
 aiohttp = [
@@ -560,9 +563,8 @@ multidict = [
     {file = "multidict-5.2.0-cp39-cp39-win_amd64.whl", hash = "sha256:c9631c642e08b9fff1c6255487e62971d8b8e821808ddd013d8ac058087591ac"},
     {file = "multidict-5.2.0.tar.gz", hash = "sha256:0dd1c93edb444b33ba2274b66f63def8a327d607c6c790772f448a53b6ea59ce"},
 ]
-perspective = [
-    {file = "perspective-1.0.3-py3-none-any.whl", hash = "sha256:7566d534d697fcb75f9f2ea9568c12fcf06c1557ea2abaa1a842581a9cbc7919"},
-    {file = "perspective-1.0.3.tar.gz", hash = "sha256:6faec174ae7ac986721af018815cfd7c3b5e425d6bedda463898ab20f8cd373d"},
+pyperspective = [
+    {file = "PyPerspective-1.0.4-py3-none-any.whl", hash = "sha256:6761bf4d1b0c60a12ca82ce902df4949d0869221bed599e967a11d8eea97db34"},
 ]
 replit = [
     {file = "replit-3.2.4-py3-none-any.whl", hash = "sha256:4fa5895e1e090ba23c179641bc88ab0486d1bea696515aa3147fce55733e29e1"},

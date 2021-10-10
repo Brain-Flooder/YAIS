@@ -13,7 +13,7 @@ discord-pretty-help = "^1.3.3"
 validators = "^0.18.2"
 discord-better-help = "^1.3.0"
 replit = "^3.2.4"
-perspective = "^1.0.3"
+PyPerspective = "^1.0.4"
 
 [tool.poetry.dev-dependencies]
 

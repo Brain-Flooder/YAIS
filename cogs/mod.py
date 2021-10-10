@@ -3,7 +3,13 @@ import discord
 from discord.ext import commands
 import re
 from replit import db
-import perspective
+
+apikey = os.environ['perapi']
+
+from PyPerspective.Perspective import Perspective #upm package(PyPerspective)
+perspective = Perspective(apikey,ratelimit=True,default_not_store=True) # Default Do Not Store Option Is True.
+# Default Not Store Option Is For Not Providing Do_Not_Store Kwarg In Get Score Function
+# You Can Overwrite Default If You Gave Kwarg In Get Score Func
 
 class Moderation(commands.Cog, name='Moderation'):
   '''Moderation command'''
@@ -98,7 +104,6 @@ class Moderation(commands.Cog, name='Moderation'):
 
   @commands.Cog.listener()
   async def on_message(self,message):
-    
       with open('cogs/autodisabled.txt','r') as fi:
         a  = fi.readline()
         dg = a.split(', ')
@@ -114,13 +119,13 @@ class Moderation(commands.Cog, name='Moderation'):
           if 'y!ct' or 'y!checktoxicity' in message.content.lower():
             pass
           else:
-              perkey = os.environ['token']
-              p = perspective.PerspectiveAPI(perkey)
-              result = p.score(message.content)
-              print('e')
-              if result > 0.85:
+              scores = perspective.get_score(message.content,tests=["TOXICITY"])
+              My_Attribute = scores["TOXICITY"]
+              print(My_Attribute.score)
+              if float(My_Attribute.score) > 0.75:
                 await message.delete()
                 await message.channel.send(f"{message.author.mention} Don't say that >:(",delete_after=3)
+    
                 """
                     db[f"{message.author.id}, {message.author.guild.id}"]
                   
