@@ -160,7 +160,7 @@ class Moderation(commands.Cog, name='Moderation'):
     
   @commands.command(name='checkToxicity',aliases=['ct'])
   async def ct(self,ctx,*,checkThis):
-    scores = perspective.get_score(ctx.content,tests=["TOXICITY"])
+    scores = perspective.get_score(checkThis,tests=["TOXICITY"])
     My_Attribute = scores["TOXICITY"]
     print(My_Attribute.score)
     await ctx.reply(f"Toxicity test for {checkThis} completed.\nIt's toxicity is {My_Attribute.score*100}")
