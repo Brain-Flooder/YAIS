@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import time
 import random
+import asyncio
 
 class FunCommands(commands.Cog, name='FunCommands'):
     '''These are the fun commands'''
@@ -13,7 +14,7 @@ class FunCommands(commands.Cog, name='FunCommands'):
     async def coinfilp(self,ctx):
         await ctx.send(f'{ctx.author.mention} flipped the coin!')
         h = random.randint(0,1)
-        time.sleep(random.random()+random.random()+random.random())
+        await asyncio.sleep(random.random()+random.random()+random.random())
         if h == 1:
           await ctx.send('The coin is head. GG!')
         else:
@@ -22,7 +23,7 @@ class FunCommands(commands.Cog, name='FunCommands'):
     @commands.command(name='dice')
     async def dice(self,ctx):
         await ctx.send(f'{ctx.author.mention} rolled the dice.')
-        time.sleep(random.random()+random.random()+random.random())
+        await asyncio.sleep(random.random()+random.random()+random.random())
         h = random.randint(1,6)
         if h == 1:
           await ctx.send('The dice rolled 1. GG!')

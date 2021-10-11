@@ -2,11 +2,9 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import MissingPermissions, CheckFailure, CommandNotFound, NotOwner, MissingRequiredArgument, TooManyArguments, BotMissingPermissions
 import time
-
 class OnCommandErrorCog(commands.Cog, name="on command error"):
   def __init__(self, bot:commands.Bot):
     self.bot = bot
-        
   @commands.Cog.listener()
   async def on_command_error(self, ctx:commands.Context, error:commands.CommandError):
     if isinstance(error, commands.CommandOnCooldown):
@@ -38,6 +36,5 @@ class OnCommandErrorCog(commands.Cog, name="on command error"):
     else:
       print(error)
       await ctx.reply('An unknown error occured.\nFor more help, join this server (https://discord.gg/t9eH5yuMR4) and send us a photo of the error.')
-
 def setup(bot):
 	bot.add_cog(OnCommandErrorCog(bot))

@@ -2,14 +2,12 @@ import os
 import discord
 from keep_alive import keep_alive
 from discord.ext import commands
-from pretty_help import DefaultMenu, PrettyHelp
 
 intents = discord.Intents().all()
 
 bot = commands.Bot(
     command_prefix="ys?",  # Change to desired prefix
     case_insensitive=True,  # Commands aren't case-sensitive
-    help_command=None,
 		intents=intents,
 )
 bot.author_id = 832264231617167381  # Change to your discord id!!!
@@ -20,9 +18,6 @@ async def on_ready():  # When the bot is ready
     print(bot.user)  # Prints the bot's username and identifier
     await bot.change_presence(activity=discord.Activity(
         type=discord.ActivityType.watching, name=f"{bot.command_prefix}help"))
-
-menu = DefaultMenu('◀️', '▶️', '❌') # You can copy-paste any icons you want.
-bot.help_command = PrettyHelp(navigation=menu, color=0x8ad2ff) 
 
 @bot.command(name='nick')
 async def nick(ctx,*,nick):
