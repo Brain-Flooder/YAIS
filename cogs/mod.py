@@ -6,6 +6,8 @@ from replit import db
 
 apikey = os.environ['perapi']
 
+from perspective import PerspectiveAPI #upm package (perspective)
+
 from PyPerspective.Perspective import Perspective #upm package(PyPerspective)
 perspective = Perspective(apikey,ratelimit=True,default_not_store=True) # Default Do Not Store Option Is True.
 # Default Not Store Option Is For Not Providing Do_Not_Store Kwarg In Get Score Function
@@ -55,83 +57,55 @@ class Moderation(commands.Cog, name='Moderation'):
       user = await self.bot.fetch_user(id)
       await ctx.guild.unban(user)
       await ctx.send(f'{user.mention} is unbanned!')
-    
-      
-    
-  @commands.command(name='addBadWord',aliases=['abw'])
-  @commands.has_permissions(manage_messages=True)
-  async def addBadWord(self,ctx,badword:str):
-    with open('cogs/badwords.txt','r+')as f:
-      hmm = f.readline()
-      check=re.findall(f'{badword}',hmm)
-      if len(check) > 0:
-        await ctx.send("Hmm.. Seem like this word is already in the bad words list")
-      else:
-        f.seek(0)
-        f.write(f', {badword}')
-        await ctx.send('Added successfully!')
 
-  @commands.command(name='ShowBadWord',aliases=['sbw'])
-  async def ShowBadWord(seld, ctx):
-    with open('cogs/badwords.txt','r') as f:
-      f.seek(2)
-      hmm=f.readline()
-    await ctx.send(f'Bad words list: {hmm}.')
-    
-  @commands.command(name='enableFilter',aliases=['ef'])
-  @commands.has_permissions(manage_messages=True)
-  async def df(self,ctx):
-    with open ('cogs/autodisabled.txt', 'r+') as f:
-      e = f.readline()
-      i = e.split(', ')
-      a=''
-      for x in i:
-        if x == str(ctx.guild.id):
-          pass
-        else:
-          a+=f', {x}'
-      f.seek(0)
-      f.truncate()
-      f.write(a)
-    await ctx.send('Done')
-    
   @commands.command(name='disableFilter',aliases=['df'])
   @commands.has_permissions(manage_messages=True)
+  async def df(self,ctx):
+    try:
+      with open ('cogs/autodisabled.txt', 'a') as f:
+        f.write(f', {str(ctx.message.channel.id)}')
+      await ctx.send('Done')
+    except ValueError:
+      await ctx.send('The channel is already disabled.')
+  
+  @commands.command(name='enableFilter',aliases=['ef'])
+  @commands.has_permissions(manage_messages=True)
   async def ef(self,ctx):
-    with open ('cogs/autodisabled.txt', 'a') as f:
-      f.write(f'{str(ctx.guild.id)}, ')
-    await ctx.send('Done')
+    try:
+      with open ('cogs/autodisabled.txt', 'r+') as f:
+        e = f.readline()
+        a = e.split(', ')
+        if '' in a:
+          a.remove('')
+      with open('cogs/autodisabled.txt','w') as f:
+        a.remove(str(ctx.message.channel.id))
+        f.write('0')
+        for x in a:
+          f.write(f', {x}')
+      await ctx.send('Done')
+    except ValueError:
+      await ctx.send('The channel is already enabled.')
 
   @commands.Cog.listener()
   async def on_message(self,message):
       with open('cogs/autodisabled.txt','r') as fi:
         a  = fi.readline()
         dg = a.split(', ')
-      if str(message.guild.id) not in dg:
-          """with open('cogs/badwords.txt','r')as f:
-          hmm = f.readline()
-          yae = hmm.split(', ')
-          for i in yae:
-            if i == '':
-              yae.remove(i)"""
-          if message.author == self.bot.user:
-            return
-          if 'y!ct' or 'y!checktoxicity' in message.content.lower():
-            pass
-          else:
-              scores = perspective.get_score(message.content,tests=["TOXICITY"])
-              My_Attribute = scores["TOXICITY"]
-              print(My_Attribute.score)
-              if float(My_Attribute.score) > 0.75:
-                await message.delete()
-                await message.channel.send(f"{message.author.mention} Don't say that >:(",delete_after=3)
-    
-                """
-                    db[f"{message.author.id}, {message.author.guild.id}"]
+      if str(message.channel.id) not in dg:
+        if message.author == self.bot.user:
+          return
+        if 'y!ct' or 'y!checktoxicity' in message.content.lower():
+          pass
+        else:
+          p = PerspectiveAPI(apikey)
+          result = p.score(message.content)
+          e = result["TOXICITY"]
+          print(result["TOXICITY"])
+          if e > 0.75:
+            await message.delete()
+            await message.channel.send(f"{message.author.mention} Don't say that >:(",delete_after=3)
                   
-                    db[f"{message.author.id}, {message.author.guild.id}"] ='1'"""
-                  
-          if message.author == self.bot.user:
+        if message.author == self.bot.user:
             return
     
       
@@ -159,11 +133,12 @@ class Moderation(commands.Cog, name='Moderation'):
       await e.send(f'{ctx.message.author.mention} nuked the channel')
     
   @commands.command(name='checkToxicity',aliases=['ct'])
-  async def ct(self,ctx,*,checkThis):
-    scores = perspective.get_score(checkThis,tests=["TOXICITY"])
-    My_Attribute = scores["TOXICITY"]
-    print(My_Attribute.score)
-    await ctx.reply(f"Toxicity test for {checkThis} completed.\nIt's toxicity is {My_Attribute.score*100}")
+  async def ct(self,ctx,*,other):
+    p = PerspectiveAPI(apikey)
+    result = p.score(other)
+    e = result["TOXICITY"]
+    print(result["TOXICITY"])
+    await ctx.reply(f"Toxicity test for {other} completed.\nIt's toxicity is {e*100}")
 
   @commands.command(name='mute',description='Mute someone')
   @commands.has_permissions(manage_messages=True)
