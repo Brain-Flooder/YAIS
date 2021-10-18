@@ -6,8 +6,6 @@ from replit import db
 
 apikey = os.environ['perapi']
 
-from perspective import PerspectiveAPI #upm package (perspective)
-
 from PyPerspective.Perspective import Perspective #upm package(PyPerspective)
 perspective = Perspective(apikey,ratelimit=True,default_not_store=True) # Default Do Not Store Option Is True.
 # Default Not Store Option Is For Not Providing Do_Not_Store Kwarg In Get Score Function
@@ -63,7 +61,7 @@ class Moderation(commands.Cog, name='Moderation'):
   async def df(self,ctx):
     try:
       with open ('cogs/autodisabled.txt', 'a') as f:
-        f.write(f', {str(ctx.message.channel.id)}')
+        f.write(f', {str(ctx.channel.id)}')
       await ctx.send('Done')
     except ValueError:
       await ctx.send('The channel is already disabled.')
@@ -72,13 +70,14 @@ class Moderation(commands.Cog, name='Moderation'):
   @commands.has_permissions(manage_messages=True)
   async def ef(self,ctx):
     try:
+      a=[]
       with open ('cogs/autodisabled.txt', 'r+') as f:
         e = f.readline()
         a = e.split(', ')
         if '' in a:
           a.remove('')
       with open('cogs/autodisabled.txt','w') as f:
-        a.remove(str(ctx.message.channel.id))
+        a.remove(str(ctx.channel.id))
         f.write('0')
         for x in a:
           f.write(f', {x}')
@@ -88,24 +87,18 @@ class Moderation(commands.Cog, name='Moderation'):
 
   @commands.Cog.listener()
   async def on_message(self,message):
-      with open('cogs/autodisabled.txt','r') as fi:
-        a  = fi.readline()
-        dg = a.split(', ')
-      if str(message.channel.id) not in dg:
-        if message.author == self.bot.user:
-          return
-        if 'y!ct' or 'y!checktoxicity' in message.content.lower():
-          pass
-        else:
-          p = PerspectiveAPI(apikey)
-          result = p.score(message.content)
-          e = result["TOXICITY"]
-          print(result["TOXICITY"])
-          if e > 0.75:
-            await message.delete()
-            await message.channel.send(f"{message.author.mention} Don't say that >:(",delete_after=3)
+      skda = message.content
+      scores = perspective.get_score(message.content,tests=["TOXICITY"],langs=["en"])
+      if message.author == self.bot.user:
+        return
+      if 'ys?ct' or 'ys?checktoxicity' in skda:
+        My_Attribute = scores["TOXICITY"]
+        print(My_Attribute.score)
+        if My_Attribute.score > 0.75:
+          await message.delete()
+          await message.channel.send(f"{message.author.mention} Don't say that >:(",delete_after=3)
                   
-        if message.author == self.bot.user:
+      if message.author == self.bot.user:
             return
   
   @commands.command(name='nuke', description='Clone and delete a channel')
@@ -120,11 +113,9 @@ class Moderation(commands.Cog, name='Moderation'):
     
   @commands.command(name='checkToxicity',aliases=['ct'])
   async def ct(self,ctx,*,other):
-    p = PerspectiveAPI(apikey)
-    result = p.score(other)
-    e = result["TOXICITY"]
-    print(result["TOXICITY"])
-    await ctx.reply(f"Toxicity test for {other} completed.\nIt's toxicity is {e*100}")
+    scores = perspective.get_score(other,tests=["TOXICITY"],langs=["en"]) # Tests Default Setted To TOXICITY, Langs Default Setted To English
+    My_Attribute = scores["TOXICITY"]
+    await ctx.reply(f"Toxicity test for {other} completed.\nIt's toxicity is {My_Attribute.score*100}")
 
   @commands.command(name='mute',description='Mute someone')
   @commands.has_permissions(manage_messages=True)
