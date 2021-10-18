@@ -3,11 +3,11 @@ import discord
 from keep_alive import keep_alive
 from discord.ext import commands
 
-bot = discord.Bot(
+bot = commands.Bot(
     command_prefix="ys?",  # Change to desired prefix
     case_insensitive=True,  # Commands aren't case-sensitive
 )
-intents = discord.bot.Intents().all()
+intents = discord.Intents().all()
 bot.author_id = 832264231617167381  # Change to your discord id!!!
 
 @bot.event

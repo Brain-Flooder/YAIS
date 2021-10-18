@@ -107,20 +107,6 @@ class Moderation(commands.Cog, name='Moderation'):
                   
         if message.author == self.bot.user:
             return
-    
-      
-  
-  @commands.command()
-  async def check(self,ctx):
-    e=db.keys()
-    print(e)
-  
-  @commands.command()
-  async def clearwarn(self,ctx,mem:discord.Member):
-    
-      del db[f"{mem.id}, {mem.guild}"]
-    
-      print(db[f"{mem.id}, {mem.guild}"])
   
   @commands.command(name='nuke', description='Clone and delete a channel')
   @commands.has_permissions(manage_channels=True)

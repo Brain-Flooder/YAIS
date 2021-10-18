@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.ext.commands import MissingPermissions, CheckFailure, CommandNotFound, NotOwner, MissingRequiredArgument, TooManyArguments, BotMissingPermissions
-import time
+
 class OnCommandErrorCog(commands.Cog, name="on command error"):
   def __init__(self, bot:commands.Bot):
     self.bot = bot
