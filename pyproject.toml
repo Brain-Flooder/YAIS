@@ -12,6 +12,7 @@ replit = "^3.2.4"
 PyPerspective = "^1.0.4"
 perspective = "^1.0.3"
 discord = "^1.7.3"
+discord-pretty-help = "^1.3.3"
 
 [tool.poetry.dev-dependencies]
 

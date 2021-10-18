@@ -91,7 +91,7 @@ class Moderation(commands.Cog, name='Moderation'):
       scores = perspective.get_score(message.content,tests=["TOXICITY"],langs=["en"])
       if message.author == self.bot.user:
         return
-      if 'ys?ct' or 'ys?checktoxicity' in skda:
+      if 'ys?ct' not in skda or 'ys?checktoxicity' not in skda:
         My_Attribute = scores["TOXICITY"]
         print(My_Attribute.score)
         if My_Attribute.score > 0.75:
