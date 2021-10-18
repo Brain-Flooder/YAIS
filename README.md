@@ -6,7 +6,7 @@ We used these packages:
 
 [Discord.py](https://github.com/Rapptz/discord.py) (Public Archived)
 
-[PyPerspective](https://github.com/TunayAdaKaracan/PyPerspective)
+[PyPerspective](https://github.com/TunayAdaKaracan/PyPerspective) (In develop)
 
 [Flask](https://github.com/pallets/flask)
 
