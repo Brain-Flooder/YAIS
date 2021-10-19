@@ -1,8 +1,6 @@
 import os
 import discord
 from discord.ext import commands
-import re
-from replit import db
 
 apikey = os.environ['perapi']
 
@@ -87,11 +85,10 @@ class Moderation(commands.Cog, name='Moderation'):
 
   @commands.Cog.listener()
   async def on_message(self,message):
-      skda = message.content
       scores = perspective.get_score(message.content,tests=["TOXICITY"],langs=["en"])
       if message.author == self.bot.user:
         return
-      if 'ys?ct' not in skda or 'ys?checktoxicity' not in skda:
+      if message.content.startswith == 'ys?ct' or message.content.startswith == 'ys?checktoxicity':
         My_Attribute = scores["TOXICITY"]
         print(My_Attribute.score)
         if My_Attribute.score > 0.75:

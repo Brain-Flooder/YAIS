@@ -18,6 +18,11 @@ async def on_ready():  # When the bot is ready
     await bot.change_presence(activity=discord.Activity(
         type=discord.ActivityType.watching, name=f"{bot.command_prefix}help"))
 
+@bot.command(name='sd')
+async def sd(ctx):
+  if ctx.author.id == bot.author_id:
+    await bot.close()
+
 @bot.command(name='nick')
 async def nick(ctx,*,nick):
   await ctx.author.edit(nick=nick)

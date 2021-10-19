@@ -2,7 +2,6 @@ import discord
 from replit import db
 from discord.ext import commands
 import random
-import asyncio
 
 cashE = '<:YeetCoin:899166414546559056>'
 
@@ -41,12 +40,16 @@ class EconomyCommands(commands.Cog, name='EconomyCommands'):
         db[f'{ctx.author.id}'] = f'{value}'
         if e<0:
           await ctx.send(f'You messed things up! You spend {-e}{cashE} to make things back.')
+        elif e>=0 and e<=50:
+          await ctx.send(f"What a lazy guy. You didn't work enough. That is why you only get {e}{cashE}.")
         else:
           await ctx.send(f'You did a great job. You get {e}{cashE} for that.')
       except KeyError:
         db[ctx.author.id]=f'{e}'
         if e<0:
           await ctx.send(f'You messed things up! You spend {-e}{cashE} to make things back.')
+        elif e<=0 and e<50:
+          await ctx.send(f"What a lazy guy. You didn't work enough. That is why you only get {e}{cashE}.")
         else:
           await ctx.send(f'You did a great job. You get {e}{cashE} for that.')
 
@@ -108,6 +111,29 @@ class EconomyCommands(commands.Cog, name='EconomyCommands'):
           db[f"{x.id}"]='0'
           e += f"\n{x.name}: {db[str(x.id)]}"
       await ctx.send(e)
+    @commands.command(name='sell')
+    @commands.cooldown(rate=1, per=3600)
+    async def sell(self,ctx,*,thing):
+      e = random.randint(0,250)
+      try:
+        value = int(db[f'{ctx.author.id}'])
+        value += e
+        db[f'{ctx.author.id}'] = f'{value}'
+        if e==0:
+          await ctx.send(f'No one buy your {thing} You get {e}{cashE}')
+        elif e<50:
+          await ctx.send(f"You are kinda bad at sell things. You get {e}{cashE}.")
+        else:
+          await ctx.send(f'You are good at sell things. You get {e}{cashE}')
+      except KeyError:
+        db[ctx.author.id]=f'{e}'
+        db[f'{ctx.author.id}'] = f'{value}'
+        if e==0:
+          await ctx.send(f'No one buy your {thing} You get {e}{cashE}')
+        elif e<50:
+          await ctx.send(f"You are kinda bad at sell things. You get {e}{cashE}.")
+        else:
+          await ctx.send(f'You are good at sell things. You get {e}{cashE}')
 
     
 def setup(bot):
