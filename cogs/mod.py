@@ -1,5 +1,5 @@
 import os
-import discord
+import discord #upm package(novus)
 from discord.ext import commands
 
 apikey = os.environ['perapi']

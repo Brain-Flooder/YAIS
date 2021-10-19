@@ -1,4 +1,4 @@
-import discord
+import discord #upm package(novus)
 from replit import db
 from discord.ext import commands
 import random

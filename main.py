@@ -1,5 +1,5 @@
 import os
-import discord
+import discord #upm package(novus)
 from keep_alive import keep_alive
 from discord.ext import commands
 

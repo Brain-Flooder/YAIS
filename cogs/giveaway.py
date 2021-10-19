@@ -1,4 +1,4 @@
-import discord
+import discord #upm package(novus)
 from discord.ext import commands
 import time
 import random
