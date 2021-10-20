@@ -4,13 +4,15 @@ YAIS is a ~~powerless~~ powerful Discord and all-in-one Discord bot. The creator
 ## Used Packages
 We used these packages:
 
-[Discord.py](https://github.com/Rapptz/discord.py) (Public Archived)
+[Discord.py](https://github.com/Rapptz/discord.py) (Public Archived) (API Wrapper for Discord API)
 
-[PyPerspective](https://github.com/TunayAdaKaracan/PyPerspective) (In develop)
+[PyPerspective](https://github.com/TunayAdaKaracan/PyPerspective) (In develop) (API Wrapper for Google's Perspective API)
 
 [Flask](https://github.com/pallets/flask)
 
-[Replit](https://github.com/replit/replit-py)
+[Replit](https://github.com/replit/replit-py) (Replit API)
+
+[Discord's Scammers](https://discordscammers.com/)
 ## Command
 ### Moderation commands
 Ban
