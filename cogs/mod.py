@@ -1,6 +1,8 @@
 import os
 import discord
 from discord.ext import commands
+import requests
+import json
 
 apikey = os.environ['perapi']
 
@@ -94,7 +96,7 @@ class Moderation(commands.Cog, name='Moderation'):
         if My_Attribute.score > 0.75:
           await message.delete()
           await message.channel.send(f"{message.author.mention} Don't say that >:(",delete_after=3)
-      else:
+      if 'ys?ct' in message.content or 'ys?checktoxicity' in message.content:
         return
                   
       if message.author == self.bot.user:
@@ -167,8 +169,6 @@ class Moderation(commands.Cog, name='Moderation'):
       count += 1
       deleted = await ctx.channel.purge(limit = count)
       await ctx.send(f'Deleted {len(deleted)-1} message',delete_after = 3)
-    
-      
 
   @commands.command(name='role')
   @commands.has_permissions(manage_roles=True)
@@ -180,10 +180,25 @@ class Moderation(commands.Cog, name='Moderation'):
       else:
         await user.add_roles(role)
         await ctx.send(f'Successfully added {user.mention} {role.mention}')
-    
-      
+  
+  @commands.command(name='isScammer')
+  async def isScammer(self,ctx,user:discord.User):
+    r = requests.get("https://discordscammers.com/api/v1/search/832264231617167381", verify=False)
+    response = r.json()
+    print(response['status'])
+    if response['status'] == 'not_found':
+      await ctx.send('That user **might** not a scammer.')
+    else:
+      await ctx.send('That user is a scammer.')
 
-  #Permssion error
+  @commands.command(name='reportScammer')
+  async def reportScammer(self,ctx,user:discord.User,*,info):
+    daata = {'ScammerID': f"{user.id}",
+    'ScammerUsername': f"{user.name}",
+    'AdditionalInfo': info}
+    postME = json.dumps(daata)
+    requests.post('https://discordscammers.com/api/v1/report',data=postME,verify=False)
+    await ctx.send('Reported!')
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
