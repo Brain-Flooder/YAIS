@@ -1,5 +1,5 @@
 import os
-import discord #upm package(novus)
+import discord
 from discord.ext import commands
 
 apikey = os.environ['perapi']
@@ -85,15 +85,17 @@ class Moderation(commands.Cog, name='Moderation'):
 
   @commands.Cog.listener()
   async def on_message(self,message):
-      scores = perspective.get_score(message.content,tests=["TOXICITY"],langs=["en"])
+      scores = perspective.get_score(message.content,tests=["TOXICITY"],langs=['en'])
       if message.author == self.bot.user:
         return
-      if message.content.startswith == 'ys?ct' or message.content.startswith == 'ys?checktoxicity':
+      if 'ys?ct' not in message.content or 'ys?checktoxicity' not in message.content:
         My_Attribute = scores["TOXICITY"]
         print(My_Attribute.score)
         if My_Attribute.score > 0.75:
           await message.delete()
           await message.channel.send(f"{message.author.mention} Don't say that >:(",delete_after=3)
+      else:
+        return
                   
       if message.author == self.bot.user:
             return
