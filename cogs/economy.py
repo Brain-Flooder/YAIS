@@ -5,7 +5,7 @@ import random
 
 cashE = '<:YeetCoin:899166414546559056>'
 
-class EconomyCommands(commands.Cog, name='EconomyCommands'):
+class EconomyCommands(commands.Cog, name='Economy Commands'):
     '''These are the fun commands'''
     def __init__(self, bot):
         self.bot = bot

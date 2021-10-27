@@ -4,7 +4,7 @@ import time
 import random
 import asyncio
 
-class GiveawayCommands(commands.Cog, name='FunCommands'):
+class GiveawayCommands(commands.Cog, name='Giveaway Commands'):
     '''These are the giveaway commands'''
     def __init__(self, bot):
         self.bot = bot

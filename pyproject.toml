@@ -10,6 +10,7 @@ Flask = "^2.0.1"
 replit = "^3.2.4"
 PyPerspective = "^1.0.4"
 discord = "^1.7.3"
+NudeNet = "^2.0.9"
 
 [tool.poetry.dev-dependencies]
 

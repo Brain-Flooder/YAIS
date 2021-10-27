@@ -2,7 +2,7 @@ from discord.ext import commands
 import random
 import asyncio
 
-class FunCommands(commands.Cog, name='FunCommands'):
+class FunCommands(commands.Cog, name='Fun Commands'):
     '''These are the fun commands'''
     def __init__(self, bot):
         self.bot = bot

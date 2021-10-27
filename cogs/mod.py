@@ -11,7 +11,7 @@ perspective = Perspective(apikey,ratelimit=True,default_not_store=True) # Defaul
 # Default Not Store Option Is For Not Providing Do_Not_Store Kwarg In Get Score Function
 # You Can Overwrite Default If You Gave Kwarg In Get Score Func
 
-class Moderation(commands.Cog, name='Moderation'):
+class Moderation(commands.Cog, name='Moderation Commands'):
   '''Moderation command'''
   def __init__(self, bot):
     self.bot = bot
@@ -87,10 +87,10 @@ class Moderation(commands.Cog, name='Moderation'):
 
   @commands.Cog.listener()
   async def on_message(self,message):
-      scores = perspective.get_score(message.content,tests=["TOXICITY"],langs=['en'])
+      scores = perspective.get_score(str(message.content),tests=["TOXICITY"],langs=['en'])
       if message.author == self.bot.user:
         return
-      if 'ys?ct' not in message.content or 'ys?checktoxicity' not in message.content:
+      if 'ys?ct' not in str(message.content) or 'ys?checktoxicity' not in str(message.content):
         My_Attribute = scores["TOXICITY"]
         print(My_Attribute.score)
         if My_Attribute.score > 0.75:
