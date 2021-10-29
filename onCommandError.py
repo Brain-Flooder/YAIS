@@ -1,5 +1,5 @@
-'''from discord.ext import commands
-from discord.ext.commands import MissingPermissions, CheckFailure, CommandNotFound, NotOwner, MissingRequiredArgument, TooManyArguments, BotMissingPermissions
+"""from disnake.ext import commands
+from disnake.ext.commands import MissingPermissions, CheckFailure, CommandNotFound, NotOwner, MissingRequiredArgument, TooManyArguments, BotMissingPermissions
 
 class OnCommandErrorCog(commands.Cog, name="on command error"):
   def __init__(self, bot:commands.Bot):
@@ -34,6 +34,6 @@ class OnCommandErrorCog(commands.Cog, name="on command error"):
         await ctx.send("Some arguments are more than needed.")
     else:
       print(error)
-      await ctx.reply('An unknown error occured.\nFor more help, join this server (https://discord.gg/t9eH5yuMR4) and send us a photo of the error.')
+      await ctx.reply('An unknown error occured.\nFor more help, join this server (https://disnake.gg/t9eH5yuMR4) and send us a photo of the error.')
 def setup(bot):
-	bot.add_cog(OnCommandErrorCog(bot))'''
+	bot.add_cog(OnCommandErrorCog(bot))"""

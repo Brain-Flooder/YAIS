@@ -1,5 +1,5 @@
-import discord
-from discord.ext import commands
+import disnake
+from disnake.ext import commands
 import time
 import random
 import asyncio
@@ -18,7 +18,7 @@ class GiveawayCommands(commands.Cog, name='Giveaway Commands'):
         x+=1
       eh=int(eh)
       print(x)
-      embed=discord.Embed()
+      embed=disnake.Embed()
       embed.add_field(name=prize,value=f'React with 🎉 to enter!\nTime: <t:{eh}:R>\nHosted by: {ctx.author.mention}')
       embed.set_footer(text = f'{winners} winner(s)')
       gwlink = await ctx.send(embed=embed)

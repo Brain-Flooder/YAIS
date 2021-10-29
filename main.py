@@ -1,23 +1,31 @@
 import os
-import discord
+import disnake
 from keep_alive import keep_alive
-from discord.ext import commands
+from disnake.ext import commands
+import asyncio
 
-intents = discord.Intents().all()
+intents = disnake.Intents().all()
 bot = commands.Bot(
     command_prefix=commands.when_mentioned_or('ys '),  # Change to desired prefix
     case_insensitive=True,  # Commands aren't case-sensitive
     intents=intents,
-    help_command = None
+    help_command = None,
+    test_guilds=[860461730421538846],
+    sync_commands = True
 )
-bot.author_id = 832264231617167381  # Change to your discord id!!!
+bot.author_id = 832264231617167381  # Change to your disnake id!!!
 
 @bot.event
 async def on_ready():  # When the bot is ready
     print("I'm in")
     print(bot.user)  # Prints the bot's username and identifier
-    await bot.change_presence(activity=discord.Activity(
-        type=discord.ActivityType.watching, name=f"October go brrr"))
+    while True:
+      await bot.change_presence(activity=disnake.Game(name=f"Be used in {len(bot.guilds)} servers"))
+      await asyncio.sleep(60)
+
+@bot.slash_command()
+async def ping(inter):
+    await inter.response.send_message('pong')
 
 @bot.command(name='prefix')
 async def pf(ctx):
@@ -31,11 +39,11 @@ async def sd(ctx):
 @bot.command(name='nick')
 async def nick(ctx,*,nick):
   await ctx.author.edit(nick=nick)
-  await ctx.send('Changed! BTW did you know Discord has a / command  for this?')
+  await ctx.send('Changed! BTW did you know disnake has a / command  for this?')
 
 @bot.command(name='invite',description='My invite link')
 async def a(ctx):
-    emb = discord.Embed(title='My invite link', description='Click [me](https://discord.com/api/oauth2/authorize?client_id=894953153160691722&permissions=8&scope=bot%20applications.commands)')
+    emb = disnake.Embed(title='My invite link', description='Click [me](https://disnake.com/api/oauth2/authorize?client_id=894953153160691722&permissions=8&scope=bot%20applications.commands)')
     await ctx.send(embed=emb)
 
 @bot.command(name='howmuchcmd')

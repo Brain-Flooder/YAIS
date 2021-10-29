@@ -1,6 +1,6 @@
-import discord
-from discord.ext import commands
-from discord.ext.commands import has_permissions, MissingPermissions
+import disnake
+from disnake.ext import commands
+from disnake.ext.commands import has_permissions, MissingPermissions
 
 class Suggest(commands.Cog, name='Suggest Commands'):
     '''These are the Suggest commands'''
@@ -9,7 +9,7 @@ class Suggest(commands.Cog, name='Suggest Commands'):
 		
     @commands.command(name='suggest', description='Suggest a idea',aliases=['sg'])
     async def suggest(self,ctx,*,idea):
-        embedVar = discord.Embed(title=f"Suggest from user with ID: {ctx.author.id}", description=f'{idea}', color=0x6FB9FF)
+        embedVar = disnake.Embed(title=f"Suggest from user with ID: {ctx.author.id}", description=f'{idea}', color=0x6FB9FF)
         with open('cogs/isban.txt')as file:
           for isBanned in file:
             isBanned = int(isBanned)
@@ -24,7 +24,7 @@ class Suggest(commands.Cog, name='Suggest Commands'):
                       checkM = '\N{THUMBS UP SIGN}'
                       await hmm.add_reaction(checkM)
                       await hmm.add_reaction(cross)
-              embedBreh = discord.Embed(title='Sent',value='Your suggestion has been sent!')
+              embedBreh = disnake.Embed(title='Sent',value='Your suggestion has been sent!')
               await ctx.send(embed=embedBreh)
             else:
               ctx.send("You have been banned from our system.")
@@ -64,7 +64,7 @@ class Suggest(commands.Cog, name='Suggest Commands'):
             with open('cogs/channel.txt','a') as f:
                 f.write('\n')
                 f.write(id)
-        embedVar = discord.Embed(title="Set up done!",color=0x85C4FF)
+        embedVar = disnake.Embed(title="Set up done!",color=0x85C4FF)
         await ctx.send(embed=embedVar)
 
     @commands.command(name='report',description='Report a suggestion',aliases=['rp'])

@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from threading import Thread
 import random
 
@@ -6,8 +6,11 @@ import random
 app = Flask('')
 
 @app.route('/')
-def home():
-	return render_template('home.html')
+def lol():
+  if random.randint(0,10) == 0:
+	  return redirect('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+  else:
+    return render_template('home.html')
 
 def run():
   app.run(

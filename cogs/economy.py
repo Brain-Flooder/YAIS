@@ -1,6 +1,6 @@
-import discord
+import disnake
 from replit import db
-from discord.ext import commands
+from disnake.ext import commands
 import random
 
 cashE = '<:YeetCoin:899166414546559056>'
@@ -12,8 +12,8 @@ class EconomyCommands(commands.Cog, name='Economy Commands'):
         
     global cashE
 
-    @commands.command(name='cash')
-    async def cash(self,ctx,user:discord.Member=None):
+    @commands.command(name='cash',description='Your cash')
+    async def cash(self,ctx,user:disnake.Member=None):
       if user is None:
         try:
           value = db[f'{ctx.author.id}']
@@ -30,7 +30,7 @@ class EconomyCommands(commands.Cog, name='Economy Commands'):
           await ctx.send(f'{user.mention} currently have {value} {cashE}')
 
       
-    @commands.command(name='work')
+    @commands.command(name='work',description='Work to get more cash')
     @commands.cooldown(rate=1, per=600)
     async def work(self,ctx):
       e = random.randint(-250,250)
@@ -54,8 +54,8 @@ class EconomyCommands(commands.Cog, name='Economy Commands'):
           await ctx.send(f'You did a great job. You get {e}{cashE} for that.')
 
       
-    @commands.command(name='transfer',aliases=['give','move'])
-    async def give(self,ctx,user:discord.User,cash:int):
+    @commands.command(name='transfer',aliases=['give','move'],description='Give someone your cash with a little tax')
+    async def give(self,ctx,user:disnake.User,cash:int):
       try:
         value1 = int(db[f'{ctx.author.id}'])
         value2 = int(db[f'{user.id}'])
@@ -95,22 +95,30 @@ class EconomyCommands(commands.Cog, name='Economy Commands'):
 
     
     @commands.command(name='clear')
-    async def clear(self,ctx,user:discord.User):
+    async def clear(self,ctx,user:disnake.User):
       if ctx.author.id == 832264231617167381 or ctx.author.id == 543656290468102174:
         db[f'{ctx.author.id}'] = '0'
         await ctx.send('Dev powah >>:)')
 
 
     @commands.command(name='leaderboard',aliases=['lb'])
-    async def ld(self,ctx):
-      e=' The Leaderboard'
+    async def lb(self,ctx):
+      e = {}
+      high = {}
       for x in ctx.guild.members:
         try:
-          e += f"\n{x.name}: {db[str(x.id)]}"
+          e.update({x.name: int(db[str(x.id)])})
         except KeyError:
           db[f"{x.id}"]='0'
-          e += f"\n{x.name}: {db[str(x.id)]}"
-      await ctx.send(e)
+          e.update({x.name: 0})
+      high=dict(sorted(e.items(),key= lambda x:x[1], reverse = True))
+      text = ''
+      for x in high:
+        text += f'{high} {high[x]}\n'
+      embed = disnake.Embed(title=f'Top highest in {ctx.guild.name}',value=text,color=0x6ba4ff)
+      embed.set_thumbnail(url=self.bot.user.avatar_url)
+      await ctx.send(embed=embed)
+
     @commands.command(name='sell')
     @commands.cooldown(rate=1, per=3600)
     async def sell(self,ctx,*,thing):
@@ -134,7 +142,6 @@ class EconomyCommands(commands.Cog, name='Economy Commands'):
           await ctx.send(f"You are kinda bad at sell things. You get {e}{cashE}.")
         else:
           await ctx.send(f'You are good at sell things. You get {e}{cashE}')
-
     
 def setup(bot):
     bot.add_cog(EconomyCommands(bot))
