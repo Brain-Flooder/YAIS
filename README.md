@@ -1,18 +1,20 @@
 # YAIS, another moderator bot is here
 ## Description
 YAIS is a ~~powerless~~ powerful Discord and all-in-one Discord bot. The creators of this bot are me (Discord tag: Brain Flooder#9985) and Edwin (Discord tag: .edwin#0472)
-## Used Packages
-We used these packages:
+## Credit
+### Used packages:
 
-[Discord.py](https://github.com/Rapptz/discord.py) (Public Archived) (API Wrapper for Discord API)
+[Disnake](https://github.com/EQUENOS/disnake/) (From discord.py) (API Wrapper for Discord API)
 
-[PyPerspective](https://github.com/TunayAdaKaracan/PyPerspective) (In develop) (API Wrapper for Google's Perspective API)
+[PSpective](https://github.com/Brain-Flooder/PySpective) (In develop) (API Wrapper for Google's Perspective API)
 
 [Flask](https://github.com/pallets/flask)
 
 [Replit](https://github.com/replit/replit-py) (Replit API)
 
 [Discord's Scammers](https://discordscammers.com/)
+### Recycle code
+We will made our own multi-prefix
 ## Command
 ### Moderation commands
 Ban

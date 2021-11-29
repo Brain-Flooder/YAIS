@@ -10,11 +10,9 @@ import os
 
 apikey = os.environ['perapi']
 
-from PyPerspective.Perspective import Perspective  #upm package(PyPerspective)
+from pyspective import pyspective
 
-perspective = Perspective(
-    apikey, ratelimit=True,
-    default_not_store=True)
+perspective = pyspective.PyspectiveAPI(apikey)
 
 cashE = '<:YeetCoin:899166414546559056>'
 
@@ -22,7 +20,10 @@ class SlashCommands(commands.Cog, name='Slash commands'):
     '''These are the fun slash_commands'''
     def __init__(self, bot):
         self.bot = bot
-    
+    @commands.slash_command(name='nsfw',description="It's not")
+    async def nsfw(self,inter):
+      await inter.response.send_message('https://tenor.com/view/rick-astly-rick-rolled-gif-22755440')
+
     #economy
     global cashE
 
@@ -44,7 +45,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
           await inter.response.send_message(f'{user.mention} currently have {value} {cashE}')
 
       
-    @commands.slash_command(name='work',description='Work to get more cash')
+    @commands.slash_command(name='work',description='Work to get more coins')
     @commands.cooldown(rate=1, per=600)
     async def work(self,inter):
       e = random.randint(-250,250)
@@ -115,7 +116,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
         await inter.response.send_message('Dev powah >>:)')
 
 
-    @commands.slash_command(name='leaderboard')
+    @commands.slash_command(name='leaderboard',description='Show the top 20 richest users')
     async def lb(self,inter):
       e = {}
       high = {}
@@ -127,39 +128,17 @@ class SlashCommands(commands.Cog, name='Slash commands'):
           e.update({x.name: 0})
       high=dict(sorted(e.items(),key= lambda x:x[1], reverse = True))
       text = ''
+      e = 0
       for x in high:
-        text += f'{high} {high[x]}\n'
-      embed = disnake.Embed(title=f'Top highest in {inter.guild.name}',value=text,color=0x6ba4ff)
-      embed.set_thumbnail(url=self.bot.user.avatar_url)
+        if e == 20:
+          return
+        else:
+          text += f'{x}: {high[x]}\n'
+        e+=1
+      embed = disnake.Embed(title=f'Top highest in {inter.guild.name}',description=text,color=0x6ba4ff)
       await inter.response.send_message(embed=embed)
 
-    @commands.slash_command(name='sell')
-    @commands.cooldown(rate=1, per=3600)
-    async def sell(self,inter,*,thing):
-      e = random.randint(0,250)
-      try:
-        value = int(db[f'{inter.author.id}'])
-        value += e
-        db[f'{inter.author.id}'] = f'{value}'
-        if e==0:
-          await inter.response.send_message(f'No one buy your {thing} You get {e}{cashE}')
-        elif e<50:
-          await inter.response.send_message(f"You are kinda bad at sell things. You get {e}{cashE}.")
-        else:
-          await inter.response.send_message(f'You are good at sell things. You get {e}{cashE}')
-      except KeyError:
-        db[inter.author.id]=f'{e}'
-        db[f'{inter.author.id}'] = f'{value}'
-        if e==0:
-          await inter.response.send_message(f'No one buy your {thing} You get {e}{cashE}')
-        elif e<50:
-          await inter.response.send_message(f"You are kinda bad at sell things. You get {e}{cashE}.")
-        else:
-          await inter.response.send_message(f'You are good at sell things. You get {e}{cashE}')
-
-
     #Giveaway
-
 
     @commands.slash_command(name='create_giveaway')
     @commands.has_permissions(manage_guild=True)
@@ -185,7 +164,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
     
     #help
 
-    @commands.slash_command(name='help')
+    @commands.slash_command(name='help',description='Uhh.. help?')
     async def help(self,inter,*,slash_command_for_help:str=None):
       embed = disnake.Embed(color=0x6ba4ff)
       embed.set_thumbnail(url='https://cdn.discordapp.com/avatars/894953153160691722/18d909ab88d84d3b3ff66c6165efad4f.webp?size=1024')
@@ -217,14 +196,14 @@ class SlashCommands(commands.Cog, name='Slash commands'):
 
     #Mod 
 
-    @commands.slash_command(name='ban')
+    @commands.slash_command(name='ban',description='Ban user')
     @commands.has_permissions(ban_members=True)
     async def ban(self, inter, user: disnake.Member, *, reason=None):
 
         await inter.response.send_message(f'{user.mention} was banned. Reason: {reason}')
         await inter.guild.ban(user, reason=reason)
 
-    @commands.slash_command(name='kick')
+    @commands.slash_command(name='kick',description='Kick user')
     @commands.has_permissions(kick_members=True)
     async def kick(self, inter, user: disnake.Member, *, reason=None):
 
@@ -233,7 +212,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
             f'You got banned from {user.guild.name}. Reason:{reason} ')
         await inter.response.send_message(f'{user.mention} was banned. Reason: ')
 
-    @commands.slash_command(name='ban_list')
+    @commands.slash_command(name='ban_list',description='Get the banned users list')
     @commands.has_permissions(ban_members=True)
     async def banList(self, inter):
 
@@ -244,18 +223,18 @@ class SlashCommands(commands.Cog, name='Slash commands'):
                 name=
                 f'User {x.user.name}#{x.user.discriminator} with ID: {x.user.id}',
                 value=f'Reason: {x.reason}')
-        await inter.author.response.send_message(embed=embed)
+        await inter.author.send(embed=embed)
         await inter.response.send_message('Sent. Check your DM')
 
-    @commands.slash_command()
+    @commands.slash_command(name='unban',description='Unban user')
     @commands.has_permissions(ban_members=True)
-    async def unban(self, inter, *, id: int):
-
-        user = await self.bot.fetch_user(id)
+    async def unban(self, inter, *, userid):
+        userid = int(userid)
+        user = await self.bot.fetch_user(userid)
         await inter.guild.unban(user)
         await inter.response.send_message(f'{user.mention} is unbanned!')
 
-    @commands.slash_command(name='disable_filter')
+    @commands.slash_command(name='disable_filter',description='Disable the AI based filter')
     @commands.has_permissions(manage_messages=True)
     async def df(self, inter):
         with open('cogs/autodisabled.txt', 'a+') as f:
@@ -268,7 +247,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
             else:
               await inter.response.send_message('This channel is already disabled.')
 
-    @commands.slash_command(name='enable_filter')
+    @commands.slash_command(name='enable_filter',description='Enable the AI based filter')
     @commands.has_permissions(manage_messages=True)
     async def ef(self, inter):
       a = []
@@ -287,26 +266,6 @@ class SlashCommands(commands.Cog, name='Slash commands'):
         except ValueError:
           await inter.response.send_message('This channel is already enabled.')
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
-      if message.author == self.bot.user:
-        return
-      with open('cogs/autodisabled.txt') as f:
-        idk = f.readline()
-        if str(message.channel.id) not in idk:
-          if message.content != '':
-            scores = perspective.get_score(str(message.content),tests=["TOXICITY"],langs=['en'])
-            if 'ys checktoxicity' not in  message.content.lower():
-              My_Attribute = scores["TOXICITY"]
-              print(My_Attribute.score)
-              if My_Attribute.score > 0.75:
-                await message.delete()
-                await message.channel.response.send_message(f"{message.author.mention} Don't say that >:(",delete_after=3)
-            else:
-              return
-        else:
-            return
-
     @commands.slash_command(name='nuke', description='Clone and delete a channel')
     @commands.has_permissions(manage_channels=True)
     async def nuke(self, inter):
@@ -316,15 +275,15 @@ class SlashCommands(commands.Cog, name='Slash commands'):
         await e.edit(position=m)
         await e.response.send_message(f'{inter.message.author.mention} nuked the channel')
 
-    @commands.slash_command(name='check_toxicity')
+    @commands.slash_command(name='check_toxicity',description='Check the toxicity of a word/sentence')
     async def ct(self, inter, *, other):
-        scores = perspective.get_score(other, tests=["TOXICITY"], langs=["en"])  # Tests Default Setted To TOXICITY, Langs Default Setted To English
+        scores = perspective.score(other)
         My_Attribute = scores["TOXICITY"]
         await inter.response.send_message(
             f"Toxicity test for {other} completed.\nIt's toxicity is {My_Attribute.score*100}"
         )
 
-    @commands.slash_command(name='mute', description='Mute someone')
+    @commands.slash_command(name='mute', description='Mute user')
     @commands.has_permissions(manage_messages=True)
     async def mute(self, inter, user: disnake.Member, *, reson=None):
 
@@ -344,7 +303,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
                 await x.set_permissions(breh, overwrite=overwrite)
         await inter.response.send_message(f'User {user} has been muted. Reason: {reson}')
 
-    @commands.slash_command(name='unmute')
+    @commands.slash_command(name='unmute',description='Unmute user')
     @commands.has_permissions(manage_messages=True)
     async def unmute(self, inter, user: disnake.Member, *, reson=None):
 
@@ -372,7 +331,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
         deleted = await inter.channel.purge(limit=count)
         await inter.response.send_message(f'Deleted {len(deleted)-1} message', delete_after=3)
 
-    @commands.slash_command(name='role')
+    @commands.slash_command(name='role',description='Give/remove role from an user')
     @commands.has_permissions(manage_roles=True)
     async def role(self, inter, user: disnake.Member, role: disnake.Role):
 
@@ -384,7 +343,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
             await user.add_roles(role)
             await inter.response.send_message(f'Successfully added {user.mention} {role.mention}')
 
-    @commands.slash_command(name='is_scammer')
+    @commands.slash_command(name='is_scammer',description='Check is a user a scammer. Not always true')
     async def isScammer(self, inter, user: disnake.User):
         r = requests.get(
             f"https://disnakescammers.com/api/v1/search/{user.id}",
@@ -396,7 +355,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
         else:
             await inter.response.send_message('That user is a scammer.')
 
-    @commands.slash_command(name='report_scammer')
+    @commands.slash_command(name='report_scammer',description='Report scammer')
     async def reportScammer(self, inter, user: disnake.User, *, info):
         daata = {
             'ScammerID': f"{user.id}",

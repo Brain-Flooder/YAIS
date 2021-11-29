@@ -10,10 +10,9 @@ bot = commands.Bot(
     case_insensitive=True,  # Commands aren't case-sensitive
     intents=intents,
     help_command = None,
-    test_guilds=[860461730421538846],
     sync_commands = True
 )
-bot.author_id = 832264231617167381  # Change to your disnake id!!!
+bot.author_id = 832264231617167381  # Change to your discord id!!!
 
 @bot.event
 async def on_ready():  # When the bot is ready
@@ -23,13 +22,14 @@ async def on_ready():  # When the bot is ready
       await bot.change_presence(activity=disnake.Game(name=f"Be used in {len(bot.guilds)} servers"))
       await asyncio.sleep(60)
 
-@bot.slash_command()
-async def ping(inter):
-    await inter.response.send_message('pong')
 
 @bot.command(name='prefix')
 async def pf(ctx):
   await ctx.reply(f'My prefix is {bot.command_prefix}')
+
+@bot.command(name='nsfw',description="It's not")
+async def nsfw(ctx):
+  await ctx.send('https://tenor.com/view/rick-astly-rick-rolled-gif-22755440')
 
 @bot.command(name='sd')
 async def sd(ctx):

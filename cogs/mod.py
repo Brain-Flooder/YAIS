@@ -3,18 +3,16 @@ import disnake
 from disnake.ext import commands
 import requests
 import json
+from google_translate_py import Translator
 import urllib3
+from replit import db
 
 urllib3.disable_warnings()
 apikey = os.environ['perapi']
 
-from PyPerspective.Perspective import Perspective  #upm package(PyPerspective)
+from pyspective import pyspective
 
-perspective = Perspective(
-    apikey, ratelimit=True,
-    default_not_store=True)  # Default Do Not Store Option Is True.
-# Default Not Store Option Is For Not Providing Do_Not_Store Kwarg In Get Score Function
-# You Can Overwrite Default If You Gave Kwarg In Get Score Func
+perspective = pyspective.PyspectiveAPI(apikey)
 
 
 class Moderation(commands.Cog, name='Moderation Commands'):
@@ -22,14 +20,14 @@ class Moderation(commands.Cog, name='Moderation Commands'):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='ban')
+    @commands.command(name='ban',description='Ban user')
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, user: disnake.Member, *, reason=None):
 
         await ctx.send(f'{user.mention} was banned. Reason: {reason}')
         await ctx.guild.ban(user, reason=reason)
 
-    @commands.command(name='kick')
+    @commands.command(name='kick',description='Kick user')
     @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, user: disnake.Member, *, reason=None):
 
@@ -38,7 +36,7 @@ class Moderation(commands.Cog, name='Moderation Commands'):
             f'You got banned from {user.guild.name}. Reason:{reason} ')
         await ctx.send(f'{user.mention} was banned. Reason: ')
 
-    @commands.command(name='banList')
+    @commands.command(name='banList',description='Get the banned users list')
     @commands.has_permissions(ban_members=True)
     async def banList(self, ctx):
 
@@ -52,7 +50,7 @@ class Moderation(commands.Cog, name='Moderation Commands'):
         await ctx.author.send(embed=embed)
         await ctx.send('Sent. Check your DM')
 
-    @commands.command()
+    @commands.command(name='unBan',description='Unban user')
     @commands.has_permissions(ban_members=True)
     async def unban(self, ctx, *, id: int):
 
@@ -60,54 +58,44 @@ class Moderation(commands.Cog, name='Moderation Commands'):
         await ctx.guild.unban(user)
         await ctx.send(f'{user.mention} is unbanned!')
 
-    @commands.command(name='disableFilter', aliases=['df'])
+    @commands.command(name='disableFilter', aliases=['df'],description='Disable the AI based filter')
     @commands.has_permissions(manage_messages=True)
     async def df(self, ctx):
-        with open('cogs/autodisabled.txt', 'a+') as f:
-            f.seek(1)
-            e = f.readline()
-            r = e.split(' ')
-            if str(ctx.channel.id) not in r:
-              f.write(f' {str(ctx.channel.id)}')
-              await ctx.send('Done')
-            else:
-              await ctx.send('This channel is already disabled.')
+      value = db["AI gone"]
+      if ctx.channel.id in value:
+        await ctx.send('This channel is already disabled.')
+        return
+      else:
+        value.append(ctx.channel.id)      
+        db["AI gone"] = value
+      await ctx.send('Done')
 
-    @commands.command(name='enableFilter', aliases=['ef'])
+    @commands.command(name='enableFilter', aliases=['ef'],description='Enable the AI based filter')
     @commands.has_permissions(manage_messages=True)
     async def ef(self, ctx):
-      a = []
-      with open('cogs/autodisabled.txt', 'r') as f:
-        f.seek(1)
-        e = f.readline()
-        a = e.split(' ')
-      with open('cogs/autodisabled.txt', 'w') as f:
-        try:
-          a.remove(str(ctx.channel.id))
-          text = ''
-          for x in a:
-            text += f' {x}'
-          f.write(text)
-          await ctx.send('Done')
-        except ValueError:
-          await ctx.send('This channel is already enabled.')
+      value = db["AI gone"]
+      if ctx.channel.id in value:
+        value.remove(ctx.channel.id)
+      else:
+        await ctx.send('This channel is already disabled.')
+        return
+      await ctx.send('Done')
 
     @commands.Cog.listener()
     async def on_message(self, message):
       if message.author == self.bot.user:
         return
-      with open('cogs/autodisabled.txt') as f:
-        idk = f.readline()
-        if str(message.channel.id) not in idk:
-          if message.content != '':
-            scores = perspective.get_score(str(message.content),tests=["TOXICITY"],langs=['en'])
-            if 'ys checktoxicity' not in  message.content.lower():
-              My_Attribute = scores["TOXICITY"]
-              print(My_Attribute.score)
-              if My_Attribute.score > 0.75:
-                await message.delete()
-                await message.channel.send(f"{message.author.mention} Don't say that >:(",delete_after=3)
-            else:
+      value = db["AI gone"]
+      if str(message.channel.id) not in value:
+        if message.content != '':
+          translator = Translator()
+          tranThis = translator.translate(f"{message.content}", "", "en")
+          scores = perspective.score(str(tranThis))
+          if 'ys checktoxicity' not in  message.content.lower():
+                if float(scores['TOXICITY']) > 0.9:
+                  await message.delete()
+                  await message.channel.send(f"{message.author.mention} Don't say that >:(",delete_after=3)
+          else:
               return
         else:
             return
@@ -121,7 +109,7 @@ class Moderation(commands.Cog, name='Moderation Commands'):
         await e.edit(position=m)
         await e.send(f'{ctx.message.author.mention} nuked the channel')
 
-    @commands.command(name='checkToxicity')
+    @commands.command(name='checkToxicity',description='Check the toxicity of a word/sentence')
     async def ct(self, ctx, *, other):
         scores = perspective.get_score(other, tests=["TOXICITY"], langs=["en"])  # Tests Default Setted To TOXICITY, Langs Default Setted To English
         My_Attribute = scores["TOXICITY"]
@@ -129,7 +117,7 @@ class Moderation(commands.Cog, name='Moderation Commands'):
             f"Toxicity test for {other} completed.\nIt's toxicity is {My_Attribute.score*100}"
         )
 
-    @commands.command(name='mute', description='Mute someone')
+    @commands.command(name='mute', description='Mute user')
     @commands.has_permissions(manage_messages=True)
     async def mute(self, ctx, user: disnake.Member, *, reson=None):
 
@@ -149,7 +137,7 @@ class Moderation(commands.Cog, name='Moderation Commands'):
                 await x.set_permissions(breh, overwrite=overwrite)
         await ctx.send(f'User {user} has been muted. Reason: {reson}')
 
-    @commands.command(name='unmute')
+    @commands.command(name='unmute',description='Unmute user')
     @commands.has_permissions(manage_messages=True)
     async def unmute(self, ctx, user: disnake.Member, *, reson=None):
 
@@ -177,7 +165,7 @@ class Moderation(commands.Cog, name='Moderation Commands'):
         deleted = await ctx.channel.purge(limit=count)
         await ctx.send(f'Deleted {len(deleted)-1} message', delete_after=3)
 
-    @commands.command(name='role')
+    @commands.command(name='role',description='Give/remove role from an user')
     @commands.has_permissions(manage_roles=True)
     async def role(self, ctx, user: disnake.Member, role: disnake.Role):
 
@@ -189,7 +177,7 @@ class Moderation(commands.Cog, name='Moderation Commands'):
             await user.add_roles(role)
             await ctx.send(f'Successfully added {user.mention} {role.mention}')
 
-    @commands.command(name='isScammer')
+    @commands.command(name='isScammer',description='Check is a user a scammer. Not always true')
     async def isScammer(self, ctx, user: disnake.User):
         r = requests.get(
             f"https://disnakescammers.com/api/v1/search/{user.id}",
@@ -201,7 +189,7 @@ class Moderation(commands.Cog, name='Moderation Commands'):
         else:
             await ctx.send('That user is a scammer.')
 
-    @commands.command(name='reportScammer')
+    @commands.command(name='reportScammer',description='Report scammer')
     async def reportScammer(self, ctx, user: disnake.User, *, info):
         daata = {
             'ScammerID': f"{user.id}",

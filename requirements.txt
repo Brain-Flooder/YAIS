@@ -1,4 +1,0 @@
-discord>=1.7.3
-PyPerspective>=1.0.4
-Flask>=2.0.2
-replit>=3.2.4

@@ -6,7 +6,7 @@ class HelpCommands(commands.Cog, name='Help Commands'):
     def __init__(self, bot):
       self.bot = bot
     
-    @commands.command(name='help')
+    @commands.command(name='help',description='Uhh.. help?')
     async def help(self,ctx,*,command_for_help:str=None):
       embed = Embed(color=0x6ba4ff)
       embed.set_thumbnail(url='https://cdn.discordapp.com/avatars/894953153160691722/18d909ab88d84d3b3ff66c6165efad4f.webp?size=1024')

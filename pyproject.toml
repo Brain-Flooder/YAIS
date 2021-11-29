@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "YAIS bot."
-version = "0.4.0"
-description = ""
+version = "0.6.0"
+description = "A Discord bot"
 authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
@@ -9,9 +9,11 @@ python = "^3.8"
 Flask = "^2.0.1"
 replit = "^3.2.4"
 PyPerspective = "^1.0.4"
-discord = "^1.7.3"
-NudeNet = "^2.0.9"
 disnake = "^2.1.5"
+PySpective = "^0.0.2"
+discord = "^1.7.3"
+googletrans = "^3.0.0"
+"google-translate.py" = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 
