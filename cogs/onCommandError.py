@@ -35,40 +35,40 @@ class OnCommandErrorCog(commands.Cog, name="on command error"):
         await ctx.send("Some arguments are more than needed.")
     else:
       print(error)
-      await ctx.reply('An unknown error occured.\nFor more help, join this server (https://discord.gg/t9eH5yuMR4) and send us a photo of the error.')
+      await ctx.reply('An unknown error occured.')
 
 
   
   @commands.Cog.listener()
-  async def on_slash_command_error(self, inter:disnake.ApplicationCommandInteraction, error:commands.CommandError):
+  async def on_slash_command_error(self, ctx,error:commands.CommandError):
     if isinstance(error, commands.CommandOnCooldown):
       day = round(error.retry_after/86400)
       hour = round(error.retry_after/3600)
       minute = round(error.retry_after/60)
       if day > 0:
-        await inter.inter.response.send_message('This command has a cooldown, for '+str(day)+ "day(s)")
+        await ctx.response.send_message('This command has a cooldown, for '+str(day)+ "day(s)")
       elif hour > 0:
-        await inter.inter.response.send_message('This command has a cooldown, for '+str(hour)+ " hour(s)")
+        await ctx.response.send_message('This command has a cooldown, for '+str(hour)+ " hour(s)")
       elif minute > 0:
-        await inter.inter.response.send_message('This command has a cooldown, for '+ str(minute)+" minute(s)")
+        await ctx.response.send_message('This command has a cooldown, for '+ str(minute)+" minute(s)")
       else:
-        await inter.response.send_message(f'This command has a cooldown, for {error.retry_after:.2f} second(s)')
+        await ctx.response.send_message(f'This command has a cooldown, for {error.retry_after:.2f} second(s)')
     elif isinstance(error, CommandNotFound):
-      await inter.response.send_message("No command found",delete_after=3)
+      await ctx.response.send_message("No command found",delete_after=3)
     elif isinstance(error, MissingPermissions):
-      await inter.response.send_message("❌ You don't have permission to do that.")
+      await ctx.response.send_message("❌ You don't have permission to do that.")
     elif isinstance(error, BotMissingPermissions):
-      await inter.response.send_message("I don't have permission to do that :(")
+      await ctx.response.send_message("I don't have permission to do that :(")
     elif isinstance(error, CheckFailure):
-      await inter.response.send_message(error)
+      await ctx.response.send_message(error)
     elif isinstance(error, NotOwner):
-      await inter.response.send_message(error)
+      await ctx.response.send_message(error)
     elif isinstance(error, MissingRequiredArgument):
-        await inter.response.send_message("A argument is missing")
+        await ctx.response.send_message("A argument is missing")
     elif isinstance(error, TooManyArguments):
-        await inter.response.send_message("Some arguments are more than needed.")
+        await ctx.response.send_message("Some arguments are more than needed.")
     else:
       print(error)
-      await inter.response.send_message('An unknown error occured.\nFor more help, join this server (https://discord.gg/t9eH5yuMR4) and send us a photo of the error.')
+      await ctx.response.send_message('An unknown error occured.')
 def setup(bot):
 	bot.add_cog(OnCommandErrorCog(bot))

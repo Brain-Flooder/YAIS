@@ -61,44 +61,44 @@ class Moderation(commands.Cog, name='Moderation Commands'):
     @commands.command(name='disableFilter', aliases=['df'],description='Disable the AI based filter')
     @commands.has_permissions(manage_messages=True)
     async def df(self, ctx):
-      value = db["AI gone"]
-      if ctx.channel.id in value:
-        await ctx.send('This channel is already disabled.')
-        return
-      else:
-        value.append(ctx.channel.id)      
-        db["AI gone"] = value
-      await ctx.send('Done')
+        value = db["AI gone"]
+        if ctx.channel.id in value:
+            await ctx.send('This channel is already disabled.')
+            return
+        else:
+            value.append(ctx.channel.id)
+            db["AI gone"] = value
+        await ctx.send('Done')
 
     @commands.command(name='enableFilter', aliases=['ef'],description='Enable the AI based filter')
     @commands.has_permissions(manage_messages=True)
     async def ef(self, ctx):
-      value = db["AI gone"]
-      if ctx.channel.id in value:
-        value.remove(ctx.channel.id)
-      else:
-        await ctx.send('This channel is already disabled.')
-        return
-      await ctx.send('Done')
+        value = db["AI gone"]
+        if ctx.channel.id in value:
+            value.remove(ctx.channel.id)
+        else:
+            await ctx.send('This channel is already disabled.')
+            return
+        await ctx.send('Done')
 
     @commands.Cog.listener()
     async def on_message(self, message):
-      if message.author == self.bot.user:
-        return
-      value = db["AI gone"]
-      if str(message.channel.id) not in value:
-        if message.content != '':
-          translator = Translator()
-          tranThis = translator.translate(f"{message.content}", "", "en")
-          scores = perspective.score(str(tranThis))
-          if 'ys checktoxicity' not in  message.content.lower():
-                if float(scores['TOXICITY']) > 0.9:
-                  await message.delete()
-                  await message.channel.send(f"{message.author.mention} Don't say that >:(",delete_after=3)
-          else:
-              return
-        else:
+        if message.author == self.bot.user:
             return
+        value = db["AI gone"]
+        if str(message.channel.id) not in value:
+            if message.content != '':
+                translator = Translator()
+                tranThis = translator.translate(f"{message.content}", "", "en")
+                scores = perspective.score(str(tranThis))
+                if 'ys checktoxicity' not in  message.content.lower():
+                    if float(scores['TOXICITY']) > 0.9:
+                        await message.delete()
+                        await message.channel.send(f"{message.author.mention} Don't say that >:(",delete_after=3)
+                else:
+                    return
+            else:
+                return
 
     @commands.command(name='nuke', description='Clone and delete a channel')
     @commands.has_permissions(manage_channels=True)

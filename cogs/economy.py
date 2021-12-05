@@ -1,6 +1,6 @@
 import disnake
 from replit import db
-from disnake.ext import commands,tasks
+from disnake.ext import commands
 import random
 
 cashE = '<:YeetCoin:899166414546559056>'

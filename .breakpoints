@@ -15,14 +15,6 @@
         "version": 2736,
         "index": 341
       }
-    ],
-    "cogs/slash.py": [
-      {
-        "id": "d9560edb-4bd8-4e6b-a588-eb8f06d50d64",
-        "line": 32,
-        "version": 995,
-        "index": 819
-      }
     ]
   }
 }

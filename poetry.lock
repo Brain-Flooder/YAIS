@@ -113,7 +113,7 @@ voice = ["PyNaCl (>=1.3.0,<1.5)"]
 
 [[package]]
 name = "disnake"
-version = "2.2.1"
+version = "2.2.2"
 description = "A Python wrapper for the Discord API"
 category = "main"
 optional = false
@@ -407,7 +407,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "75e40d44163e584fd73e10776b86a465f6edd2f7c63eeb93673658dc3c061a53"
+content-hash = "5719e1cdf22c6e71118e7fc0e35f2771da0e65c6784b014331c4283b3f177fbb"
 
 [metadata.files]
 aiohttp = [
@@ -486,8 +486,8 @@ discord = [
     {file = "discord.py-1.7.3.tar.gz", hash = "sha256:462cd0fe307aef8b29cbfa8dd613e548ae4b2cb581d46da9ac0d46fb6ea19408"},
 ]
 disnake = [
-    {file = "disnake-2.2.1-py3-none-any.whl", hash = "sha256:4780d6d7c1b8b94f1c93bdff827aa5dbbc0b0fc8383d5c8c56bbcb9f2e335047"},
-    {file = "disnake-2.2.1.tar.gz", hash = "sha256:bc0b7ebc9a3f9330c3fd3e694bfc2c2d0701b41ba94f531b2de780a79e87773c"},
+    {file = "disnake-2.2.2-py3-none-any.whl", hash = "sha256:0e78dd44aed399e60e7f56b9db28ddca915a60e7d182895a0e9c8566dcc0c112"},
+    {file = "disnake-2.2.2.tar.gz", hash = "sha256:cc0b7bef8e5235b442ee85885373a0b0923c684ceb4960322de25e9e64965508"},
 ]
 flask = [
     {file = "Flask-2.0.2-py3-none-any.whl", hash = "sha256:cb90f62f1d8e4dc4621f52106613488b5ba826b2e1e10a33eac92f723093ab6a"},

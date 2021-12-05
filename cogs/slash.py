@@ -7,7 +7,6 @@ import requests
 import json
 import time
 import os
-
 apikey = os.environ['perapi']
 
 from pyspective import pyspective
@@ -17,18 +16,19 @@ perspective = pyspective.PyspectiveAPI(apikey)
 cashE = '<:YeetCoin:899166414546559056>'
 
 class SlashCommands(commands.Cog, name='Slash commands'):
-    '''These are the fun slash_commands'''
+    '''These are the slash commands'''
     def __init__(self, bot):
         self.bot = bot
+        
     @commands.slash_command(name='nsfw',description="It's not")
-    async def nsfw(self,inter):
+    async def nsfw(self, inter):
       await inter.response.send_message('https://tenor.com/view/rick-astly-rick-rolled-gif-22755440')
 
     #economy
     global cashE
 
     @commands.slash_command(name='cash',description='Your cash')
-    async def cash(self,inter,user:disnake.Member=None):
+    async def cash(self, inter,user:disnake.Member=None):
       if user is None:
         try:
           value = db[f'{inter.author.id}']
@@ -47,7 +47,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
       
     @commands.slash_command(name='work',description='Work to get more coins')
     @commands.cooldown(rate=1, per=600)
-    async def work(self,inter):
+    async def work(self, inter):
       e = random.randint(-250,250)
       try:
         value = int(db[f'{inter.author.id}'])
@@ -70,7 +70,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
 
       
     @commands.slash_command(name='transfer',description='Give someone your cash with a little tax')
-    async def give(self,inter,user:disnake.User,cash:int):
+    async def give(self, inter,user:disnake.User,cash:int):
       try:
         value1 = int(db[f'{inter.author.id}'])
         value2 = int(db[f'{user.id}'])
@@ -100,7 +100,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
 
       
     @commands.slash_command(name='test')
-    async def test(self,inter):
+    async def test(self, inter):
       if inter.author.id == 832264231617167381 or inter.author.id == 543656290468102174:
         E = db[f'{inter.author.id}']
         e = int(E)
@@ -110,14 +110,14 @@ class SlashCommands(commands.Cog, name='Slash commands'):
 
     
     @commands.slash_command(name='clear')
-    async def clear(self,inter,user:disnake.User):
+    async def clear(self, inter,user:disnake.User):
       if inter.author.id == 832264231617167381 or inter.author.id == 543656290468102174:
         db[f'{inter.author.id}'] = '0'
         await inter.response.send_message('Dev powah >>:)')
 
 
     @commands.slash_command(name='leaderboard',description='Show the top 20 richest users')
-    async def lb(self,inter):
+    async def lb(self, inter):
       e = {}
       high = {}
       for x in inter.guild.members:
@@ -142,7 +142,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
 
     @commands.slash_command(name='create_giveaway')
     @commands.has_permissions(manage_guild=True)
-    async def cgw(self,inter,times:int,winners,*,prize):
+    async def cgw(self, inter,times:int,winners,*,prize):
       eh = time.time()
       x=0
       for x in range(0,times):
@@ -161,38 +161,6 @@ class SlashCommands(commands.Cog, name='Slash commands'):
           users = await s.users().flatten()
           winner = random.choice(users)
           await gwlink.channel.response.send_message(f'{winner.mention} has won the raffle.')
-    
-    #help
-
-    @commands.slash_command(name='help',description='Uhh.. help?')
-    async def help(self,inter,*,slash_command_for_help:str=None):
-      embed = disnake.Embed(color=0x6ba4ff)
-      embed.set_thumbnail(url='https://cdn.discordapp.com/avatars/894953153160691722/18d909ab88d84d3b3ff66c6165efad4f.webp?size=1024')
-      if slash_command_for_help is None:
-        cogs = self.bot.cogs
-        for x in cogs:
-          e = self.bot.get_cog(x)
-          wit = e.get_slash_commands()
-          w = ''
-          for y in wit:
-            w += f'`{y.name}` {y.description}\n'
-          if w == '':
-            pass
-          else:
-            embed.add_field(name=x,value=f'{w} \n', inline=False)
-      else:
-        wit = self.bot.get_slash_command(slash_command_for_help)
-        if wit is not None:
-          s = ''
-          if wit.description == '':
-            s = 'None for now'
-            embed.add_field(name=wit.name,value=s)
-          else:
-            embed.add_field(name=wit.name,value=wit.description)
-        else:
-            embed.add_field(name='No slash_command found!',value='404 Not Found')
-      await inter.response.send_message(embed=embed)
-
 
     #Mod 
 
@@ -223,7 +191,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
                 name=
                 f'User {x.user.name}#{x.user.discriminator} with ID: {x.user.id}',
                 value=f'Reason: {x.reason}')
-        await inter.author.send(embed=embed)
+        await inter.author.response.send_message(embed=embed)
         await inter.response.send_message('Sent. Check your DM')
 
     @commands.slash_command(name='unban',description='Unban user')
@@ -233,38 +201,6 @@ class SlashCommands(commands.Cog, name='Slash commands'):
         user = await self.bot.fetch_user(userid)
         await inter.guild.unban(user)
         await inter.response.send_message(f'{user.mention} is unbanned!')
-
-    @commands.slash_command(name='disable_filter',description='Disable the AI based filter')
-    @commands.has_permissions(manage_messages=True)
-    async def df(self, inter):
-        with open('cogs/autodisabled.txt', 'a+') as f:
-            f.seek(1)
-            e = f.readline()
-            r = e.split(' ')
-            if str(inter.channel.id) not in r:
-              f.write(f' {str(inter.channel.id)}')
-              await inter.response.send_message('Done')
-            else:
-              await inter.response.send_message('This channel is already disabled.')
-
-    @commands.slash_command(name='enable_filter',description='Enable the AI based filter')
-    @commands.has_permissions(manage_messages=True)
-    async def ef(self, inter):
-      a = []
-      with open('cogs/autodisabled.txt', 'r') as f:
-        f.seek(1)
-        e = f.readline()
-        a = e.split(' ')
-      with open('cogs/autodisabled.txt', 'w') as f:
-        try:
-          a.remove(str(inter.channel.id))
-          text = ''
-          for x in a:
-            text += f' {x}'
-          f.write(text)
-          await inter.response.send_message('Done')
-        except ValueError:
-          await inter.response.send_message('This channel is already enabled.')
 
     @commands.slash_command(name='nuke', description='Clone and delete a channel')
     @commands.has_permissions(manage_channels=True)
@@ -371,7 +307,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
     #Suggest
 
     @commands.slash_command(name='suggest', description='Suggest a idea')
-    async def suggest(self,inter,*,idea):
+    async def suggest(self, inter,*,idea):
         embedVar = disnake.Embed(title=f"Suggest from user with ID: {inter.author.id}", description=f'{idea}', color=0x6FB9FF)
         with open('cogs/isban.txt')as file:
           for isBanned in file:
@@ -394,7 +330,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
               return 0
     @commands.slash_command(name='approve', description='Approve a suggestion')
     @commands.has_permissions(manage_messages=True)
-    async def _approve(self,inter,id):
+    async def _approve(self, inter,id):
         id=int(id)
         global yay
         huh = await inter.channel.fetch_message(id)
@@ -407,7 +343,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
 
     @commands.slash_command(name='decline', description='Decline a suggestion',)
     @commands.has_permissions(manage_messages=True)
-    async def _decline(self,inter,id):
+    async def _decline(self, inter,id):
         id=int(id)
         global yay
         huh = await inter.fetch_message(id)
@@ -418,7 +354,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
 
     @commands.slash_command(name='setup', description='Set up channel that suggestions will be sent to it')
     @commands.has_permissions(manage_channels=True)
-    async def _setup(self,inter,id=None):
+    async def _setup(self, inter,id=None):
         if id is None:
             with open('cogs/channel.txt','a') as f:
                 f.write('\n')
@@ -431,7 +367,7 @@ class SlashCommands(commands.Cog, name='Slash commands'):
         await inter.response.send_message(embed=embedVar)
 
     @commands.slash_command(name='report',description='Report a suggestion')
-    async def _report(self,inter,messagelink):
+    async def _report(self, inter,messagelink):
         re = await inter.bot.fetch_channel(883956344472895529)
         await re.response.send_message(content=messagelink)
         await inter.response.send_message(content='Sent')

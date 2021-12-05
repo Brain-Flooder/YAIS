@@ -12,7 +12,7 @@ bot = commands.Bot(
     help_command = None,
     sync_commands = True
 )
-bot.author_id = 832264231617167381  # Change to your discord id!!!
+bot.author_id = 832264231617167381
 
 @bot.event
 async def on_ready():  # When the bot is ready
